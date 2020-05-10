@@ -22,6 +22,9 @@ public class Enemy : MonoBehaviour
 
     private bool _canFire = true;
 
+    private float zigzagX = 0f;
+    private Vector3 zigzagPosition;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,7 +46,16 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        zigzagX += Time.deltaTime;
+
+        zigzagPosition = new Vector3(Mathf.Cos(zigzagX), -1, 0);
+
+        //zigzagPosition = Vector3.down * _speed * Time.deltaTime;
+
+        //zipzagPosition.x = AMPLITUDE * Mathf.Cos(zipzagX += Time.deltaTime);
+
+        //transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        transform.Translate(zigzagPosition * _speed * Time.deltaTime);
 
         if (transform.position.y < -5f)
         {
