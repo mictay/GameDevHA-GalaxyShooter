@@ -2707,5 +2707,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Asteroid
       objectReference: {fileID: 0}
+    - target: {fileID: 9178679747179518042, guid: 51b10306d2694164c8c06f2df2b0a64e,
+        type: 3}
+      propertyPath: _prefabExplosion
+      value: 
+      objectReference: {fileID: 3835320705239678652, guid: 37d6a6c563c43d545bc47d2ac47f0b5d,
+        type: 3}
+    - target: {fileID: 9178679747179518042, guid: 51b10306d2694164c8c06f2df2b0a64e,
+        type: 3}
+      propertyPath: _spawnManager
+      value: 
+      objectReference: {fileID: 264238880}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51b10306d2694164c8c06f2df2b0a64e, type: 3}
