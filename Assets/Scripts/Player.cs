@@ -135,8 +135,8 @@ public class Player : MonoBehaviour
 
         if (_isTiltControlsEnabled)
         {
-            horizontalInput = Input.acceleration.x * 2;
-            verticalInput = (_baseTiltY - Input.acceleration.y) * 2;
+            horizontalInput = Input.acceleration.x * 2.5f;
+            verticalInput = -(_baseTiltY - Input.acceleration.y) * 2.5f;
         } else
         {
             horizontalInput = Input.GetAxis("Horizontal");
