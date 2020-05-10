@@ -83,6 +83,11 @@ public class Player : MonoBehaviour
 
     private int _powerUpTimer = 0;
 
+    private bool _isTiltControlsEnabled = false;
+
+
+    private float _baseTiltY;
+
     /******************************************************************************************
      * Start is called before the first frame update
      */
@@ -97,6 +102,12 @@ public class Player : MonoBehaviour
         _thrusterGraphic = transform.GetChild(1).gameObject;
         _damageRightEngine = transform.GetChild(2).gameObject;
         _damageLeftEngine = transform.GetChild(3).gameObject;
+
+        if (SystemInfo.supportsAccelerometer && Application.platform == RuntimePlatform.Android)
+        {
+            _isTiltControlsEnabled = true;
+            _baseTiltY = Input.acceleration.y;
+        }
 
         if (_uiManager == null)
         {
@@ -119,8 +130,18 @@ public class Player : MonoBehaviour
      */
     void CalculateMovement()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = 0f;
+        float verticalInput = 0f;
+
+        if (_isTiltControlsEnabled)
+        {
+            horizontalInput = Input.acceleration.x * 2;
+            verticalInput = (_baseTiltY - Input.acceleration.y) * 2;
+        } else
+        {
+            horizontalInput = Input.GetAxis("Horizontal");
+            verticalInput = Input.GetAxis("Vertical");
+        }
 
         float speed = _speed;
 

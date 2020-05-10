@@ -9,11 +9,10 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.R) && _isGameOver == true)
+        if ( (Input.GetKey(KeyCode.R) || Input.GetKey(KeyCode.Mouse0)) && _isGameOver == true)
         {
             SceneManager.LoadScene("MainMenu");
         }
-
 
         if (Input.GetKey(KeyCode.Escape) && _isGameOver == false)
         {
