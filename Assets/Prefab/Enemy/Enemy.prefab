@@ -52,6 +52,7 @@ MonoBehaviour:
   _laserOffset: -1
   _laserPrefab: {fileID: 4529053518649509433, guid: 26c22c3a1df8a364ea546fc02ac09752,
     type: 3}
+  AMPLITUDE: 2
 --- !u!212 &8891137495132144450
 SpriteRenderer:
   m_ObjectHideFlags: 0

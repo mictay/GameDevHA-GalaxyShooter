@@ -22,6 +22,9 @@ public class Enemy : MonoBehaviour
 
     private bool _canFire = true;
 
+    [SerializeField]
+    private float AMPLITUDE = .25f;
+
     private float zigzagX = 0f;
     private Vector3 zigzagPosition;
 
@@ -46,7 +49,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        zigzagX += Time.deltaTime;
+        zigzagX += AMPLITUDE * Time.deltaTime;
 
         zigzagPosition = new Vector3(Mathf.Cos(zigzagX), -1, 0);
 
