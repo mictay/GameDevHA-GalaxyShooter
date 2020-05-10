@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     private bool _canFire = true;
 
     [SerializeField]
-    private float AMPLITUDE = .25f;
+    private float AMPLITUDE = 2.0f;
 
     private float zigzagX = 0f;
     private Vector3 zigzagPosition;
