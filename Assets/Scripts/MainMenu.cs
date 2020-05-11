@@ -11,12 +11,9 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("GameScene");
     }
 
-    void Update()
+    public void Quit()
     {
-        if (Input.GetKey(KeyCode.N))
-        {
-            LoadGame();
-        }
-
+        Application.Quit();
     }
+
 }

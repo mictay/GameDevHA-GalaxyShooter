@@ -85,8 +85,11 @@ public class Player : MonoBehaviour
 
     private bool _isTiltControlsEnabled = false;
 
-
     private float _baseTiltY;
+
+    PlayerInputActions inputAction;
+
+    Vector2 movementInput;
 
     /******************************************************************************************
      * Start is called before the first frame update
@@ -116,13 +119,21 @@ public class Player : MonoBehaviour
 
     }
 
+    void Awake()
+    {
+        inputAction = new PlayerInputActions();
+
+        //Boiler plate code, just use it to make the new Input system work
+        // per https://youtu.be/Gz0YcjXBJ3U  about 5.05 minute mark
+        inputAction.PlayerControls.Move.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
+    }
+
     /******************************************************************************************
      * Update is called once per frame
      */
     void Update()
     {
-        CalculateMovement();
-        DoFire();
+        CalculateMovement();        
     }
 
     /******************************************************************************************
@@ -139,8 +150,13 @@ public class Player : MonoBehaviour
             verticalInput = -(_baseTiltY - Input.acceleration.y) * 2.5f;
         } else
         {
-            horizontalInput = Input.GetAxis("Horizontal");
-            verticalInput = Input.GetAxis("Vertical");
+            // OLD INPUT SYSTEM
+            //horizontalInput = Input.GetAxis("Horizontal");
+            //verticalInput = Input.GetAxis("Vertical");
+
+            // NEW INPUT SYSTEM
+            horizontalInput = movementInput.x;
+            verticalInput = movementInput.y;
         }
 
         float speed = _speed;
@@ -166,11 +182,14 @@ public class Player : MonoBehaviour
     }
 
     /******************************************************************************************
+     * Migrate to new System Input tutorial from https://youtu.be/KNiM53UbGfA 
+     * 
+     * Method is wired up via the unity editor
      * 
      */
-    void DoFire()
+    public void DoFire()
     {
-        if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Mouse0)) && Time.time > _lastFire)
+        if (Time.time > _lastFire)
         {
             _lastFire = Time.time + _fireRate;
 
@@ -215,9 +234,9 @@ public class Player : MonoBehaviour
         Debug.Log("Damage");
 
         if (!_isShieldPowerupActive)
-        {            
+        {
 
-            _lives--;
+            --_lives;
             _uiManager.SetLives(_lives);
 
             switch(_lives)
@@ -379,6 +398,22 @@ public class Player : MonoBehaviour
     {
         _score += score;
         _uiManager.UpdateScore(_score);
+    }
+
+    /******************************************************************************************
+     * Requried Per new input system
+     */
+    private void OnEnable()
+    {
+        inputAction.Enable();
+    }
+
+    /******************************************************************************************
+     * Requried Per new input system
+     */
+    private void OnDisable()
+    {
+        inputAction.Disable();
     }
 
 }
