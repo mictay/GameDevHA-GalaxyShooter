@@ -15,10 +15,10 @@ public class Player : MonoBehaviour
     private bool _isShieldPowerupActive = false;
 
     [SerializeField]
-    private float _speed = 2.5f;
+    private float _speed = 10f;
 
     [SerializeField]
-    private float _speedBoost = 4.5f;
+    private float _speedBoost = 20f;
 
     [SerializeField]
     private GameObject _laserPrefab;
@@ -91,6 +91,30 @@ public class Player : MonoBehaviour
 
     Vector2 movementInput;
 
+    bool thrusterInput = false;
+    float thrusterAdder = 5.0f;
+
+    void Awake()
+    {
+        inputAction = new PlayerInputActions();
+
+        //Boiler plate code, just use it to make the new Input system work
+        // per https://youtu.be/Gz0YcjXBJ3U  about 5.05 minute mark
+        inputAction.PlayerControls.Move.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
+
+        //Listen if the Left Shift button is healdown
+        inputAction.PlayerControls.Thrusters.started += ctx => thrusterInput = true;
+        inputAction.PlayerControls.Thrusters.canceled += ctx => thrusterInput = false;
+    }
+
+    /******************************************************************************************
+     * Update is called once per frame
+     */
+    void Update()
+    {
+        CalculateMovement();
+    }
+
     /******************************************************************************************
      * Start is called before the first frame update
      */
@@ -119,22 +143,6 @@ public class Player : MonoBehaviour
 
     }
 
-    void Awake()
-    {
-        inputAction = new PlayerInputActions();
-
-        //Boiler plate code, just use it to make the new Input system work
-        // per https://youtu.be/Gz0YcjXBJ3U  about 5.05 minute mark
-        inputAction.PlayerControls.Move.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
-    }
-
-    /******************************************************************************************
-     * Update is called once per frame
-     */
-    void Update()
-    {
-        CalculateMovement();        
-    }
 
     /******************************************************************************************
      * 
@@ -159,7 +167,8 @@ public class Player : MonoBehaviour
             verticalInput = movementInput.y;
         }
 
-        float speed = _speed;
+        //add +1 if left-shift is held
+        float speed = _speed + (thrusterInput == true ? thrusterAdder : 0);
 
         if (_isSpeedPowerupActive)
             speed = _speedBoost;

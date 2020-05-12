@@ -57,6 +57,14 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Thrusters"",
+                    ""type"": ""Value"",
+                    ""id"": ""bb927778-4ef0-4ea0-b596-258fc8b04f3c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -279,6 +287,17 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                     ""action"": ""Quit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""db26f688-fc3d-4117-b451-3abdffa883f4"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Thrusters"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -292,6 +311,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         m_PlayerControls_Restart = m_PlayerControls.FindAction("Restart", throwIfNotFound: true);
         m_PlayerControls_NewGame = m_PlayerControls.FindAction("NewGame", throwIfNotFound: true);
         m_PlayerControls_Quit = m_PlayerControls.FindAction("Quit", throwIfNotFound: true);
+        m_PlayerControls_Thrusters = m_PlayerControls.FindAction("Thrusters", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -346,6 +366,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_PlayerControls_Restart;
     private readonly InputAction m_PlayerControls_NewGame;
     private readonly InputAction m_PlayerControls_Quit;
+    private readonly InputAction m_PlayerControls_Thrusters;
     public struct PlayerControlsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -355,6 +376,7 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         public InputAction @Restart => m_Wrapper.m_PlayerControls_Restart;
         public InputAction @NewGame => m_Wrapper.m_PlayerControls_NewGame;
         public InputAction @Quit => m_Wrapper.m_PlayerControls_Quit;
+        public InputAction @Thrusters => m_Wrapper.m_PlayerControls_Thrusters;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -379,6 +401,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Quit.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnQuit;
                 @Quit.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnQuit;
                 @Quit.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnQuit;
+                @Thrusters.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnThrusters;
+                @Thrusters.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnThrusters;
+                @Thrusters.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnThrusters;
             }
             m_Wrapper.m_PlayerControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -398,6 +423,9 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
                 @Quit.started += instance.OnQuit;
                 @Quit.performed += instance.OnQuit;
                 @Quit.canceled += instance.OnQuit;
+                @Thrusters.started += instance.OnThrusters;
+                @Thrusters.performed += instance.OnThrusters;
+                @Thrusters.canceled += instance.OnThrusters;
             }
         }
     }
@@ -409,5 +437,6 @@ public class @PlayerInputActions : IInputActionCollection, IDisposable
         void OnRestart(InputAction.CallbackContext context);
         void OnNewGame(InputAction.CallbackContext context);
         void OnQuit(InputAction.CallbackContext context);
+        void OnThrusters(InputAction.CallbackContext context);
     }
 }

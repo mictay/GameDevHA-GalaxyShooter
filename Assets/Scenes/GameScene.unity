@@ -585,6 +585,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: a148e6f0-a48d-49ea-be41-2957ffc5fddc
     m_ActionName: Player Controls/Fire[/Keyboard/space,/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b8431893-247b-4b59-aecd-41c902a2d11d
+    m_ActionName: Player Controls/Restart[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 719c172a-9fe9-4b9c-9337-1712e194a822
+    m_ActionName: Player Controls/NewGame[/Keyboard/n]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 932b2de2-83c4-49cc-9134-0d6359d9deda
+    m_ActionName: Player Controls/Quit[/Keyboard/q,/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bb927778-4ef0-4ea0-b596-258fc8b04f3c
+    m_ActionName: Player Controls/Thrusters[/Keyboard/leftShift]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player Controls
