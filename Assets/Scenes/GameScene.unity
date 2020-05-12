@@ -771,8 +771,9 @@ MonoBehaviour:
   - {fileID: 1804387448071785700, guid: 7f0441ccd9851d647a36477b10ddbcb7, type: 3}
   _enemyContainer: {fileID: 1439943167}
   _spawnRate: 3
-  _powerUpRate: 5
+  _powerUpRate: 11
   _explosionSound: {fileID: 129652669}
+  _playerLives: 3
 --- !u!4 &264238881
 Transform:
   m_ObjectHideFlags: 0

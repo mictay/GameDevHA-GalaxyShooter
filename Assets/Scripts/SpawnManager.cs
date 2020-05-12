@@ -18,12 +18,17 @@ public class SpawnManager : MonoBehaviour
     private float _spawnRate = 3.0f;
 
     [SerializeField]
-    private float _powerUpRate = 8.0f;
+    private float _powerUpRate = 11.0f;
 
     private bool _stopSpawning = false;
 
     [SerializeField]
     private AudioSource _explosionSound;
+
+    [SerializeField]
+    private int _playerLives = 3;
+
+    private int _help = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -68,18 +73,49 @@ public class SpawnManager : MonoBehaviour
         {
             Vector3 positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
 
-            int rnd = Random.Range(0, _powerUps.Length);
-            Debug.Log("Powerup Spawn = " + rnd);
+            int start = 0;
+
+            //Help 3 times...
+            if (_playerLives == 1 && _help++ < 3)
+            {
+                Debug.Log("Helping with a Shield or Health PowerUp:" + _help);
+                start = 2;
+            }
+
+            int rnd = Random.Range(start, _powerUps.Length);
+
+            //Help 3 times...
+            if (_playerLives == 1 && _help++ < 3)
+            {
+                Debug.Log("Helping with a Health PowerUp:" + _help);
+                rnd = 3;
+            }
+
+            //rnd = 2; //Shield Only for testing
+            //rnd = 3; //Health Only for testing
 
             GameObject powerup = _powerUps[rnd];
 
             Instantiate(powerup, positionToSpawn, Quaternion.identity);
 
-            float seconds = Random.Range(_powerUpRate, _powerUpRate * 2);
+            float seconds = Random.Range(_powerUpRate, _powerUpRate * 1.5f);
             Debug.Log("SpawnPowerUps waiting for " + seconds + " seconds");
 
             yield return new WaitForSeconds(seconds);
         }
+
+    }
+
+    /***************************************
+     * If the player is near death, we'll
+     * throw a few health powerups to help
+     */
+    public void SetLives(int lives)
+    {
+        _playerLives = lives;
+
+        if(_playerLives > 1)
+            _help = 0;
 
     }
 

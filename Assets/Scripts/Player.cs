@@ -55,9 +55,9 @@ public class Player : MonoBehaviour
 
     private int _deaths = 3;
 
-    private int _tripleShotPowerupTimeToLive = 5;
-    private int _speedPowerupTimeToLive = 5;
-    private int _shieldPowerupTimeToLive = 5;
+    private int _tripleShotPowerupTimeToLive = 10;
+    private int _speedPowerupTimeToLive = 10;
+    private int _shieldPowerupTimeToLive = 10;
 
     private SpawnManager _spawnManager;
 
@@ -65,7 +65,13 @@ public class Player : MonoBehaviour
     private GameObject _thrusterGraphic;
     private GameObject _damageRightEngine;
     private GameObject _damageLeftEngine;
-    
+
+    private int _shieldHits = 0;
+    private Color[] _shieldHitColors = {
+        new Color(255, 255, 255), //full
+        new Color(255, 255, 0), // hit 1
+        new Color(255, 0, 0), // hit 2
+    };
 
     private UIManager _uiManager;
 
@@ -94,6 +100,8 @@ public class Player : MonoBehaviour
     bool thrusterInput = false;
     float thrusterAdder = 5.0f;
 
+    private SpriteRenderer _shieldSprite;
+
     void Awake()
     {
         inputAction = new PlayerInputActions();
@@ -105,6 +113,7 @@ public class Player : MonoBehaviour
         //Listen if the Left Shift button is healdown
         inputAction.PlayerControls.Thrusters.started += ctx => thrusterInput = true;
         inputAction.PlayerControls.Thrusters.canceled += ctx => thrusterInput = false;
+
     }
 
     /******************************************************************************************
@@ -122,10 +131,14 @@ public class Player : MonoBehaviour
     {
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        _spawnManager.SetLives(_lives);
 
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        _uiManager.SetLives(_lives);
 
         _shieldGraphic = transform.GetChild(0).gameObject;
+        _shieldSprite = _shieldGraphic.GetComponent<SpriteRenderer>();
+
         _thrusterGraphic = transform.GetChild(1).gameObject;
         _damageRightEngine = transform.GetChild(2).gameObject;
         _damageLeftEngine = transform.GetChild(3).gameObject;
@@ -247,8 +260,9 @@ public class Player : MonoBehaviour
 
             --_lives;
             _uiManager.SetLives(_lives);
+            _spawnManager.SetLives(_lives);
 
-            switch(_lives)
+            switch (_lives)
             {
                 case 2:
                     _damageSound.Play();
@@ -272,13 +286,23 @@ public class Player : MonoBehaviour
 
         } else
         {
-            //_shieldGraphic.SetActive(false);
-            //_isShieldPowerupActive = false;
-            Debug.Log("sheild hit: " + _lives);
+
+            //Increment the shield hits
+            _shieldHits += 1;
+            Debug.Log("Shield Color: " + _shieldHits);
+
+            //Is it the last hit?
+            if (_shieldHits >= _shieldHitColors.Length)
+            {
+                ShieldPowerDown();                
+            } else
+            {
+                if (_shieldSprite != null && _shieldHits < _shieldHitColors.Length)
+                    _shieldSprite.color = _shieldHitColors[_shieldHits];
+            }
+
             _score += 1;
         }
-
-        Debug.Log("lives: " + _lives);
 
     }
 
@@ -308,10 +332,23 @@ public class Player : MonoBehaviour
      */
     public void ShieldPowerUp()
     {
+        _shieldSprite.color = _shieldHitColors[0]; //reset the color
+        _shieldHits = 0;
         _shieldGraphic.SetActive(true);
         _isShieldPowerupActive = true;
         _powerUpSound.Play();
         StartCoroutine(CoolDownShieldPowerUp());
+    }
+
+    /******************************************************************************************
+     * 
+     */
+    public void ShieldPowerDown()
+    {
+        _shieldGraphic.SetActive(false);
+        _isShieldPowerupActive = false;
+        _shieldHits = 0;
+        _uiManager.UpdatePowerUpLevel("Shields", 0);
     }
 
     /******************************************************************************************
@@ -324,6 +361,7 @@ public class Player : MonoBehaviour
             _healthSound.Play();
             _lives++;
             _uiManager.SetLives(_lives);
+            _spawnManager.SetLives(_lives);
 
             switch (_lives)
             {
@@ -387,17 +425,14 @@ public class Player : MonoBehaviour
     {
         _powerUpTimer = _shieldPowerupTimeToLive;
 
-        while (_powerUpTimer > 0 )
+        while (_powerUpTimer > 0 && _isShieldPowerupActive)
         {
-
             _uiManager.UpdatePowerUpLevel("Shields", _powerUpTimer);
             yield return new WaitForSeconds(1.0f);
             _powerUpTimer--;
         }
 
-        _shieldGraphic.SetActive(false);
-        _isShieldPowerupActive = false;
-        _uiManager.UpdatePowerUpLevel("Shields", 0);
+        ShieldPowerDown();        
     }
 
     /******************************************************************************************
